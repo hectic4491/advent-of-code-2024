@@ -13,12 +13,11 @@ with open("problem_3/input.txt", "r", encoding="UTF8") as f:
 
 # This pattern will find all necessary text strings.
 PATTERN_1 = r"mul\(\d{1,3},\d{1,3}\)"
-
+matches_1 = re.findall(PATTERN_1, TEXT_DATA)
 
 # Remove the excess characters on each string match
 # until we just have subarrays of 2 ints.
 INT_DATA_1 = []
-matches_1 = re.findall(PATTERN_1, TEXT_DATA)
 for string in matches_1:
   string = string.replace("mul(", "")
   string = string.replace(")", "")
