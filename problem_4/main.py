@@ -4,29 +4,44 @@ import numpy as np
 import re
 
 
+"""Problem 4; part 1"""
+# I decided to practice my array shape manipulation skills while
+# keeping some matrix properties in mind. Hence this approach is very
+# "geometric". I transpose and shift the matrix in desired forms
+# so that I can keep using the "cross_check" function. This required
+# writing a few sub-functions.
+
 DATA = []
-with open("problem_4/input.txt", "r", encoding="UTF8") as f:
-  for line in f:
-    line = line.strip()
-    DATA.append(line)
+
+try:
+  with open("problem_4/input.txt", "r", encoding="UTF8") as f:
+    for line in f:
+      line = line.strip()
+      DATA.append(line)
+except FileNotFoundError as e:
+  print(f"Error: {e}\nUsing the relative file path instead.\n")
+  with open("input.txt", "r", encoding="UTF8") as f:
+    for line in f:
+      line = line.strip()
+      DATA.append(line)
 
 
 def data_itemized_list(data):
   itemized_list = []
   for string in data:
-    itemized_list.append([c for c in string])
+    itemized_list.append([char for char in string])
   return itemized_list
 
 
-def diagnolize_list(list, direction="right"):
-  diagonal_list = []
+def offset_list(list, direction="right"):
+  offset = []
   if direction == "right":
     for i in range(len(list)):
       head = ["." for _ in range(i)]
       tail = ["." for _ in range((len(list) - 1 - i))]
 
       sub_list = head + list[i] + tail
-      diagonal_list.append(sub_list)
+      offset.append(sub_list)
 
   elif direction == "left":
     for i in range(len(list)):
@@ -34,10 +49,8 @@ def diagnolize_list(list, direction="right"):
       tail = ["." for _ in range(i)]
 
       sub_list = head + list[i] + tail
-      diagonal_list.append(sub_list)
-
-
-  return diagonal_list
+      offset.append(sub_list)
+  return offset
 
 
 def list_to_array(list):
@@ -90,8 +103,8 @@ print(f"Verticals: {verticals}")
 
 # Count right diagnols
 list = data_itemized_list(DATA)
-diagnol = diagnolize_list(list, "right")
-array = list_to_array(diagnol)
+offset = offset_list(list, "right")
+array = list_to_array(offset)
 transposed = transpose_array(array)
 list = array_to_list(transposed)
 data = list_to_data(list)
@@ -102,8 +115,8 @@ print(f"Right diagnols: {right_diagnols}")
 
 # Count left diagnols
 list = data_itemized_list(DATA)
-diagnol = diagnolize_list(list, "left")
-array = list_to_array(diagnol)
+offset = offset_list(list, "left")
+array = list_to_array(offset)
 transposed = transpose_array(array)
 list = array_to_list(transposed)
 data = list_to_data(list)
@@ -113,4 +126,26 @@ print(f"Left diagnols: {left_diagnols}")
 
 
 solution = horizontals + verticals + right_diagnols + left_diagnols
-print(f"Solution: {solution}")
+print(f"Part 1 Solution: {solution}")
+
+
+"""Problem 4; part 2"""
+
+
+# Let's try a direct array access approach
+def count_mas (data):
+  count = 0
+  for j in range(1, len(data) - 1):
+    for i in range(1, len(data[j]) - 1):
+      if data[j][i] == "A":
+        if (((data[j-1][i-1] == "M" and data[j+1][i+1] == "S") or (
+          data[j-1][i-1] == "S" and data[j+1][i+1] == "M")) and (
+            (data[j-1][i+1] == "M" and data[j+1][i-1] == "S") or (
+              data[j-1][i+1] == "S" and data[j+1][i-1] == "M"
+              )
+            )
+          ):
+          count += 1
+  return count
+
+print(f"Part 2 Solution: {count_mas(DATA)}")
