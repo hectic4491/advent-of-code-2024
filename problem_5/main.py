@@ -43,22 +43,20 @@ I.e. We would only need to calculate the intersection of each pages
 'Left" set with the remaining right-sided relative pages to give us a
 solution. Hence we could drop the 'Right' set and forgo making the second
 'if' check with regards to the 'Right dictionary.
+
+For now I'll leave them in so we can have a full picture of the approach.
 """
 
 solution = 0
 
-# Uniques:
 unique_pages = set([page for rule in RULES for page in rule])
 
-# Make dictionary.
 rule_dict = {page: {'Left': set(), 'Right': set()} for page in unique_pages}
 
-# Fill in the inner dictionary.
 for rule in RULES:
   rule_dict[rule[0]]['Right'].add(rule[1])
   rule_dict[rule[1]]['Left'].add(rule[0])
 
-# Walk through each update
 for update in UPDATES:
   correct = True
   for i, page in enumerate(update):
@@ -72,3 +70,8 @@ for update in UPDATES:
     solution += update[len(update)//2]
 
 print(f"Part 1 solution: {solution}")
+
+
+"""Problem 5; part 2"""
+
+
