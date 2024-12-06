@@ -74,4 +74,27 @@ print(f"Part 1 solution: {solution}")
 
 """Problem 5; part 2"""
 
+# Focus on fixing the incorrect updates.
+incorrect_updates = []
+for update in UPDATES:
+  correct = True
+  for i, page in enumerate(update):
+    if set(update[i+1:]).intersection(rule_dict[page]['Left']):
+      correct = False
+      break
+    if set(update[:i]).intersection(rule_dict[page]['Right']):
+      correct = False
+      break
+  if not correct:
+    incorrect_updates.append(update)
 
+
+### Tricky...
+# True: there exist a solution, so we can treat this as an exhaustive
+# process without fear of not finding a solution.
+
+for update in incorrect_updates:
+  new_update = []
+  new_update.append(update[0])  # start with the first element in update
+  if update[1]:
+    # nothing
