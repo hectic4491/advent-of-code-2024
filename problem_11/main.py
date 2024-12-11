@@ -69,17 +69,15 @@ with open("problem_11/input.txt", "r", encoding="utf8") as f:
 
 
 def rule_one(arrangement):
-  unchanged = [i for i in range(len(arrangement))]
-
+  unchanged = [True for i in range(len(arrangement))]
   for i, stone in enumerate(arrangement):
     if '0' in stone and len(stone) == 1:
       arrangement[i] = '1'
-      unchanged.pop(i)
-  
+      unchanged[i] = False
   return arrangement, unchanged
       
 
-def rule_two(arrangement, unchaged):
+def rule_two(arrangement, unchanged):
   """
   new_stone is the new 'right' stone placed at arrangement[i]. Do it 
   after the for loop ends.
@@ -92,23 +90,24 @@ def rule_two(arrangement, unchaged):
       new_stone = int(stone[len(stone)//2:])    
       new_stones[i + len(new_stones) + 1] = str(new_stone)
       arrangement[i] = stone[:len(stone)//2]
-      print(unchanged) ### TODO ### <- updated the changed indicies in this function
+      unchanged[i] = False
   for key in new_stones:
     arrangement.insert(key, new_stones[key])
+    unchanged.insert(key, False)
+  return arrangement, unchanged
 
 
+def rule_three(arrangement, unchanged):
+  for i, boolean in enumerate(unchanged):
+    if boolean:
+      new_stone = int(arrangement[i]) * 2024
+      arrangement[i] = str(new_stone)
+  return arrangement
 
-# print(DATA)
-# rule_one(DATA)
-# print(DATA)
-# rule_two(DATA)
-# print(DATA)
 
-myList = ['1000', '0', '1425', '234']
+for i in range(75): # brute force, you've failed me.
 
-print(myList)
-myList, unchanged = rule_one(myList)
-print(myList)
-print(unchanged)
-rule_two(myList)
-print(myList)
+  DATA, unchanged = rule_one(DATA)
+  DATA, unchanged = rule_two(DATA, unchanged)
+  DATA = rule_three(DATA, unchanged)
+  print(f"{i} : {len(DATA)}")
